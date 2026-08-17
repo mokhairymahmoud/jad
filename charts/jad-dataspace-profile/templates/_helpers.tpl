@@ -97,6 +97,11 @@ platform: edcv
 {{- printf "nats://%s:%v" (include "cpd.natsHost" .) .Values.nats.connection.port -}}
 {{- end -}}
 
+{{/* Kafka bootstrap servers URL. */}}
+{{- define "cpd.kafkaUrl" -}}
+{{- .Values.kafka.connection.bootstrapServers -}}
+{{- end -}}
+
 {{/* -------------------------------------------------------------------------
      Image reference.
      Usage: {{ include "cpd.image" (dict "img" .Values.edc.dataplane.image "ctx" $) }}

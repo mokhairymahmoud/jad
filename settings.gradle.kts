@@ -26,6 +26,10 @@ pluginManagement {
 
 rootProject.name = "jad"
 include(":extensions:data-plane-certs")
+include(":extensions:kafka-common")
+include(":extensions:kafka-events")
+include(":extensions:kafka-tasks-publisher")
+include(":extensions:kafka-tasks-subscriber")
 include(":tests:end2end")
 
 // launcher modules

@@ -48,9 +48,8 @@ data:
   edc.iam.siglet.issuer: "siglet-issuer"
   edc.iam.siglet.jwks.url: {{ printf "http://%s:8080/keys" (include "cpd.fqdn" (dict "svc" "siglet" "ctx" $)) | quote }}
 
-  # NATS config for events
-  edc.events.nats.url: {{ include "cpd.natsUrl" . | quote }}
-  edc.events.nats.stream: "edc-events"
-  edc.events.nats.stream.create: "false"
-  edc.events.nats.stream.create.force: "false"
+  # Kafka config for events
+  edc.kafka.bootstrap.servers: {{ include "cpd.kafkaUrl" . | quote }}
+  edc.events.kafka.topic: "edc-events"
+  edc.events.kafka.topic.create: "false"
 {{- end }}

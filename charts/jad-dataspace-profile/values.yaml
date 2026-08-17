@@ -118,12 +118,12 @@ vault:
     scheme: http
     rootToken: root       # dev only
 
-nats:
+kafka:
   connection:
-    # The platform runs NATS as a release-prefixed in-chart manifest (restored from the
-    # original raw manifest); the Service is named "<release>-nats" — here "core-platform".
-    host: core-platform-nats.edc-v.svc.cluster.local
-    port: 4222
+    # Kafka deployed as part of the platform (Bitnami Kafka with KRaft mode).
+    # Service is named "<release>-kafka" — here "core-platform-kafka".
+    bootstrapServers: core-platform-kafka.edc-v.svc.cluster.local:9092
+    securityProtocol: PLAINTEXT
 
 telemetry:
   # The telemetry-config ConfigMap is provisioned by the platform chart in this

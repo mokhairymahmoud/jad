@@ -13,6 +13,9 @@ jersey = "4.0.2"
 swagger = "2.2.52"
 opentelemetry = "2.29.0"
 postgres = "42.7.13"
+kafka = "3.9.0"
+cloudevents = "4.0.1"
+failsafe = "3.3.2"
 
 [libraries]
 # upstream EDC dependencies
@@ -58,6 +61,13 @@ jersey-multipart = { module = "org.glassfish.jersey.media:jersey-media-multipart
 postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version = "1.64.0" }
 opentelemetry-javaagent = { module = "io.opentelemetry.javaagent:opentelemetry-javaagent", version.ref = "opentelemetry" }
+
+# Kafka & CloudEvents
+kafka-clients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
+cloudevents-core = { module = "io.cloudevents:cloudevents-core", version.ref = "cloudevents" }
+cloudevents-json-jackson = { module = "io.cloudevents:cloudevents-json-jackson", version.ref = "cloudevents" }
+cloudevents-kafka = { module = "io.cloudevents:cloudevents-kafka", version.ref = "cloudevents" }
+failsafe = { module = "dev.failsafe:failsafe", version.ref = "failsafe" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.6.0" }
