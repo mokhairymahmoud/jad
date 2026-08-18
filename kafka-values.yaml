@@ -1,0 +1,77 @@
+# Kafka deployment values for JAD KinD cluster
+# Single-node KRaft mode (no ZooKeeper), minimal resources for local dev
+
+# KRaft mode (no ZooKeeper dependency)
+kraft:
+  enabled: true
+
+# Single controller+broker node (combined mode for local dev)
+controller:
+  replicaCount: 1
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+# No separate broker nodes in combined mode
+broker:
+  replicaCount: 0
+
+# Listeners
+listeners:
+  client:
+    protocol: PLAINTEXT
+  controller:
+    protocol: PLAINTEXT
+  interbroker:
+    protocol: PLAINTEXT
+
+# Disable SASL/auth for local dev
+sasl:
+  client:
+    users: []
+
+# Topic auto-creation and defaults
+extraConfig: |
+  auto.create.topics.enable=true
+  num.partitions=3
+  default.replication.factor=1
+  offsets.topic.replication.factor=1
+  transaction.state.log.replication.factor=1
+  transaction.state.log.min.isr=1
+  log.retention.hours=24
+
+# Provisioning: create EDC topics on startup
+provisioning:
+  enabled: true
+  topics:
+    - name: edc-events
+      partitions: 3
+      replicationFactor: 1
+      config:
+        cleanup.policy: delete
+        retention.ms: "86400000"
+    - name: edc-negotiation-tasks
+      partitions: 3
+      replicationFactor: 1
+      config:
+        cleanup.policy: delete
+        retention.ms: "86400000"
+    - name: edc-transfer-tasks
+      partitions: 3
+      replicationFactor: 1
+      config:
+        cleanup.policy: delete
+        retention.ms: "86400000"
+
+# Metrics (optional - for observability)
+metrics:
+  kafka:
+    enabled: false
+  jmx:
+    enabled: false

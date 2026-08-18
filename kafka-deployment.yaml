@@ -1,0 +1,157 @@
+---
+# Kafka KRaft (no ZooKeeper) - single node for local development
+# Uses the Confluent cp-kafka image already available locally
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-platform-kafka
+  namespace: edc-v
+  labels:
+    app: kafka
+spec:
+  type: ClusterIP
+  ports:
+    - name: client
+      port: 9092
+      targetPort: 9092
+    - name: controller
+      port: 9093
+      targetPort: 9093
+  selector:
+    app: kafka
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-platform-kafka
+  namespace: edc-v
+  labels:
+    app: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafka
+          image: confluentinc/cp-kafka:7.7.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9092
+              name: client
+            - containerPort: 9093
+              name: controller
+          env:
+            # KRaft mode (no ZooKeeper)
+            - name: KAFKA_NODE_ID
+              value: "1"
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker,controller"
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "1@localhost:9093"
+            - name: KAFKA_LISTENERS
+              value: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://core-platform-kafka.edc-v.svc.cluster.local:9092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "PLAINTEXT"
+            # Cluster settings
+            - name: CLUSTER_ID
+              value: "MkU3OEVBNTcwNTJENDM2Qk"
+            # Topic defaults
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_NUM_PARTITIONS
+              value: "3"
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_LOG_RETENTION_HOURS
+              value: "24"
+            # Minimal resources for local dev
+            - name: KAFKA_HEAP_OPTS
+              value: "-Xmx256m -Xms256m"
+          resources:
+            requests:
+              memory: 384Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+          readinessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 60
+            periodSeconds: 15
+---
+# Job to create EDC topics after Kafka is ready
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-topic-init
+  namespace: edc-v
+  labels:
+    app: kafka-init
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: kafka-init
+          image: confluentinc/cp-kafka:7.7.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Waiting for Kafka to be ready..."
+              until kafka-broker-api-versions --bootstrap-server core-platform-kafka:9092 2>/dev/null; do
+                echo "Kafka not ready, waiting..."
+                sleep 5
+              done
+              echo "Kafka is ready. Creating topics..."
+
+              kafka-topics --bootstrap-server core-platform-kafka:9092 \
+                --create --if-not-exists \
+                --topic edc-events \
+                --partitions 3 \
+                --replication-factor 1 \
+                --config cleanup.policy=delete \
+                --config retention.ms=86400000
+
+              kafka-topics --bootstrap-server core-platform-kafka:9092 \
+                --create --if-not-exists \
+                --topic edc-negotiation-tasks \
+                --partitions 3 \
+                --replication-factor 1 \
+                --config cleanup.policy=delete \
+                --config retention.ms=86400000
+
+              kafka-topics --bootstrap-server core-platform-kafka:9092 \
+                --create --if-not-exists \
+                --topic edc-transfer-tasks \
+                --partitions 3 \
+                --replication-factor 1 \
+                --config cleanup.policy=delete \
+                --config retention.ms=86400000
+
+              echo "All topics created successfully."
+              kafka-topics --bootstrap-server core-platform-kafka:9092 --list

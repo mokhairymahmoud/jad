@@ -7,7 +7,11 @@ meta {
 get {
   url: {{tmBaseUrl}}/tenants/{{tenant_id}}/participant-profiles/{{participant_profile_id}}
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJFZERTQSIsImtpZCI6InNpZ25pbmctand0bGV0X3BjLTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJpc3N1ZXIiLCJpc3MiOiJodHRwOi8vand0bGV0LmVkYy12LnN2Yy5jbHVzdGVyLmxvY2FsOjgwODAiLCJhdWQiOiJlZGN2IiwiaWF0IjoxNzg2ODc2NTA0LCJleHAiOjE3ODY4ODAxMDQsIm5iZiI6MTc4Njg3NjUwNCwiYWN0Ijp7ImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmVkYy12OnNlZWQtam9icyJ9LCJzY29wZSI6InByb3Zpc2lvbi1tYW5hZ2VyLWFwaTp3cml0ZSB0ZW5hbnQtbWFuYWdlci1hcGk6d3JpdGUgcHJvdmlzaW9uLW1hbmFnZXItYXBpOnJlYWQgdGVuYW50LW1hbmFnZXItYXBpOnJlYWQifQ.ntvzASjTzllx42cj9n4PoorPKqfeWCP9Yrhd8xxwvh7aEde3248xLRpq1-apOenb4sFzDPTqfbygGecVYE9HCA
 }
 
 vars:pre-request {

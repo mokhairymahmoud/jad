@@ -1,0 +1,44 @@
+meta {
+  name: cr-bff-token
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://jwtlet.edc-v.svc.cluster.local:8080/token?Content-Type=application/x-www-form-urlencoded
+  body: formUrlEncoded
+  auth: inherit
+}
+
+params:query {
+  Content-Type: application/x-www-form-urlencoded
+}
+
+body:json {
+  {
+    "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+    --data-urlencode "subject_token=${CR_BFF_TOKEN}" \
+    --data-urlencode "subject_token_type=urn:ietf:params:oauth:token-type:jwt" \
+    --data-urlencode "resource=issuer" \
+    --data-urlencode "scope=read" \
+    --data-urlencode "audience=edcv"
+  }
+}
+
+body:form-urlencoded {
+  grant_type: urn:ietf:params:oauth:grant-type:token-exchange
+  subject_token: {{CR_BFF_TOKEN}}
+  subject_token_type: urn:ietf:params:oauth:token-type:jwt
+  resource: issuer
+  scope: read
+  audience: edcv
+}
+
+vars:pre-request {
+  CR_BFF_TOKEN: eyJhbGciOiJSUzI1NiIsImtpZCI6Ik0zenhTWk85MzRKZ0FxSVBjMUs4bWpFRlJCREFOVk8xUnNwS0Z2WFNBN2sifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzg2ODk4ODUxLCJpYXQiOjE3ODY4OTgyNTEsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiMzYxYmQxY2UtZTE5Mi00Y2FmLThkM2UtZWU1NmI3ZDU2YTE2Iiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJlZGMtdiIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJjci1iZmYiLCJ1aWQiOiJlNWM5NjIxYi03YTJjLTQ0NzctOWM2My0wYzdmYWRiYTVlNTgifX0sIm5iZiI6MTc4Njg5ODI1MSwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmVkYy12OmNyLWJmZiJ9.N2EMH4zr1U_oByToDKaDAFuku1_1G96QzAqdYqFEgzpP5Z6DZUnVMG2_IbSKhZCcjw1Lb5R4pC20PLmQtIq_rG8TZEHDcvIpO1lCLM25XUpmQzScGDrkOOFeJb9KlF-zKDIWWggJnIEsbWJg0mSwOuq_KQzatP3hHBXh5U6DhCZDfJud4ZCbD0XEtbHJZ86KgtSsFDKZudxUa7tdkLAjLUeX2yH7szu8iZUcSF_kpHeNaNVxZT9OhFOccb1rQEAZcbe8yKHKbkvu7K5pXh98AurrpaqwpxrX0n73e5-VznbFiJBSrFrDFRSQPxjABCP7KBzhd3Lgdq21_CSgqGPGYw
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

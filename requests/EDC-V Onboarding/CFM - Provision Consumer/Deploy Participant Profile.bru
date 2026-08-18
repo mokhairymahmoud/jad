@@ -7,7 +7,11 @@ meta {
 post {
   url: {{tmBaseUrl}}/tenants/{{tenant_id}}/participant-profiles
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJFZERTQSIsImtpZCI6InNpZ25pbmctand0bGV0X3BjLTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJpc3N1ZXIiLCJpc3MiOiJodHRwOi8vand0bGV0LmVkYy12LnN2Yy5jbHVzdGVyLmxvY2FsOjgwODAiLCJhdWQiOiJlZGN2IiwiaWF0IjoxNzg2ODc2NDI5LCJleHAiOjE3ODY4ODAwMjksIm5iZiI6MTc4Njg3NjQyOSwiYWN0Ijp7ImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmVkYy12OnNlZWQtam9icyJ9LCJzY29wZSI6InByb3Zpc2lvbi1tYW5hZ2VyLWFwaTp3cml0ZSB0ZW5hbnQtbWFuYWdlci1hcGk6d3JpdGUifQ.Z4wRw-XWnlsap1ChSVxoYUj4YTCpdu9NQxwW15JA2CLRxTHldASUFRHfdWaOomecL1-sCsyXibxMWn9oR3USAw
 }
 
 body:json {
@@ -18,21 +22,23 @@ body:json {
     "cellId": "{{cell_id}}",
     "version": 0,
     "vpaProperties": {
-      "cfm.issuer":{
-        "key1": "value1",
-        "bar": "baz"
-      }    
+      "cfm.issuer": {
+        "membership": "active",
+        "membershipType": "full",
+        "membershipStartDate": "2026-01-01T00:00:00Z",
+        "id": "{{participant_did}}",
+        "contractVersion": "1.0",
+        "component_types": "electronics,sensors",
+        "since": "2026-01-01T00:00:00Z"
+      }
     },
     "participantRoles": {
       "{{dataspace_id}}": [
         "manufacturer"
       ]
     },
-    "properties": {
-    }
+    "properties": {}
   }
-  
-  
 }
 
 vars:pre-request {

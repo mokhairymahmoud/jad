@@ -7,13 +7,21 @@ meta {
 get {
   url: {{tmBaseUrl}}/cells
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{Bearer_token}}
 }
 
 body:json {
   
   
   
+}
+
+vars:pre-request {
+  Bearer_token: eyJhbGciOiJFZERTQSIsImtpZCI6InNpZ25pbmctand0bGV0X3BjLTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJyZWRsaW5lIiwiaXNzIjoiaHR0cDovL2p3dGxldC5lZGMtdi5zdmMuY2x1c3Rlci5sb2NhbDo4MDgwIiwiYXVkIjoiZWRjdiIsImlhdCI6MTc4NjkwMzgzMiwiZXhwIjoxNzg2OTA3NDMyLCJuYmYiOjE3ODY5MDM4MzIsImFjdCI6eyJpc3MiOiJodHRwczovL2t1YmVybmV0ZXMuZGVmYXVsdC5zdmMuY2x1c3Rlci5sb2NhbCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDplZGMtdjpyZWRsaW5lIn0sInNjb3BlIjoibWFuYWdlbWVudC1hcGk6YWRtaW4gaWRlbnRpdHktYXBpOmFkbWluIGlzc3Vlci1hZG1pbi1hcGk6YWRtaW4gcHJvdmlzaW9uLW1hbmFnZXItYXBpOndyaXRlIHRlbmFudC1tYW5hZ2VyLWFwaTp3cml0ZSBwcm92aXNpb24tbWFuYWdlci1hcGk6cmVhZCB0ZW5hbnQtbWFuYWdlci1hcGk6cmVhZCBpZGVudGl0eS1hcGk6cmVhZCBtYW5hZ2VtZW50LWFwaTpyZWFkIGlzc3Vlci1hZG1pbi1hcGk6cmVhZCBzaWdsZXQtYXBpOnJlYWQgaWRlbnRpdHktYXBpOndyaXRlIG1hbmFnZW1lbnQtYXBpOndyaXRlIGlzc3Vlci1hZG1pbi1hcGk6d3JpdGUifQ.D9WLbzq1-mKbCIkjK7T9qplxYVFrNM1QVgeGD7ACzcwspf99SPg76VapBVKoZHN-ibb-LBRxH0OoLQ93nwjJDw
 }
 
 script:post-response {
